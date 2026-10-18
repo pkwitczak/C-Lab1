@@ -1,41 +1,41 @@
-char add: 26
-char sub: 14
-char mul: 120
+char add: 19
+char sub: 11
+char mul: 60
 char div: 3
-char mod: 2
-short add: 26
-short sub: 14
-short mul: 120
+char mod: 3
+short add: 19
+short sub: 11
+short mul: 60
 short div: 3
-short mod: 2
-int add: 26
-int sub: 14
-int mul: 120
+short mod: 3
+int add: 19
+int sub: 11
+int mul: 60
 int div: 3
-int mod: 2
-long add: 26
-long sub: 14
-long mul: 120
+int mod: 3
+long add: 19
+long sub: 11
+long mul: 60
 long div: 3
-long mod: 2
-long long add: 26
-long long sub: 14
-long long mul: 120
+long mod: 3
+long long add: 19
+long long sub: 11
+long long mul: 60
 long long div: 3
-long long mod: 2
-float add: 26.0
-float sub: 14.0
-float mul: 120.0
-float div: 3.333333
-double add: 26.0
-double sub: 14.0
-double mul: 120.0
-double div: 3.333333
-unsigned char add: 26
-unsigned char sub: 14
-unsigned char mul: 120
+long long mod: 3
+float add: 19.000000
+float sub: 11.000000
+float mul: 60.000000
+float div: 3.750000
+double add: 19.000000
+double sub: 11.000000
+double mul: 60.000000
+double div: 3.750000
+unsigned char add: 19
+unsigned char sub: 11
+unsigned char mul: 60
 unsigned char div: 3
-unsigned char mod: 2
+unsigned char mod: 3
 sizeof(char): 1
 sizeof(short): 2
 sizeof(int): 4

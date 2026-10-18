@@ -122,10 +122,10 @@ double double_value;
 Dokładny rozmiar typów `short`, `int`, `long` i `long long` zależy od platformy oraz implementacji kompilatora. Nie należy zakładać ich konkretnej liczby bajtów bez sprawdzenia. Do badania rozmiaru typu używa się operatora `sizeof`.
 
 ```c
-printf("%zu\n", sizeof(short));
-printf("%zu\n", sizeof(int));
-printf("%zu\n", sizeof(long));
-printf("%zu\n", sizeof(long long));
+printf("sizeof(short): %zu\n", sizeof(short));
+printf("sizeof(int): %zu\n", sizeof(int));
+printf("sizeof(long): %zu\n", sizeof(long));
+printf("sizeof(long long): %zu\n", sizeof(long long));
 ```
 
 ## Operatory arytmetyczne
@@ -316,5 +316,6 @@ Podczas debugowania warto zwrócić uwagę na:
    6. Wykonuj program krokowo klawiszem `F10`.
    7. Obserwuj wartości zmiennych `int_a`, `char_a` oraz `float_a` w panelu **WATCH**.
    8. Zrób zrzut ekranu przedstawiający zatrzymany program oraz panel **WATCH** z trzema obserwowanymi zmiennymi.
+   9. Uruchom program z dla wartości zmiennych `15` oraz `4`
 
 _Last updated: 2026-10-04_
