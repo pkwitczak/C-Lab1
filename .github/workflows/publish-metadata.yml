@@ -1,0 +1,88 @@
+name: Publish assignment metadata to GitHub Pages
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate repository metadata JSON
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          node -e '
+          const fs = require("fs");
+          const [owner, name] = process.env.REPO.split("/");
+
+          const query = `
+            query($owner: String!, $name: String!) {
+              repository(owner: $owner, name: $name) {
+                name
+                description
+                url
+                updatedAt
+                primaryLanguage { name }
+                repositoryTopics(first: 10) {
+                  nodes { topic { name } }
+                }
+                latestRelease {
+                  tagName
+                  publishedAt
+                  url
+                }
+              }
+            }
+          `;
+
+          fetch("https://github.com", {
+            method: "POST",
+            headers: {
+              "Authorization": "Bearer " + process.env.GH_TOKEN,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ query, variables: { owner, name } })
+          })
+          .then(r => r.json())
+          .then(res => {
+            if (res.errors) {
+              console.error(JSON.stringify(res.errors, null, 2));
+              process.exit(1);
+            }
+            const r = res.data.repository;
+            const payload = {
+              name: r.name,
+              description: r.description,
+              url: r.url,
+              updatedAt: r.updatedAt,
+              language: r.primaryLanguage ? r.primaryLanguage.name : null,
+              topics: r.repositoryTopics.nodes.map(t => t.topic.name),
+              release: r.latestRelease ? {
+                tag: r.latestRelease.tagName,
+                date: r.latestRelease.publishedAt,
+                url: r.latestRelease.url
+              } : null
+            };
+            fs.writeFileSync("repo-meta.json", JSON.stringify(payload, null, 2));
+          });
+          '
+
+      - name: Checkout GitHub Pages repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/Programming-techniques-teaching-materials
+          token: ${{ secrets.PAGES_SYNC_TOKEN }}
+          path: pages-repo
+
+      - name: Save metadata to docs/repos_data/ and push
+        run: |
+          mkdir -p pages-repo/docs/repos_data
+          cp repo-meta.json "pages-repo/docs/repos_data/${{ github.event.repository.name }}.json"
+          cd pages-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@://github.com"
+          git add "docs/repos_data/${{ github.event.repository.name }}.json"
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Sync metadata: ${{ github.event.repository.name }}" && git push)
